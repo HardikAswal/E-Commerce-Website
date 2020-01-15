@@ -3,24 +3,33 @@ import React from "react";
 import { Carousel } from 'antd';
 import '../App.css';
 
+
 function Home(){
     return (
     <div>
     <Carousel autoplay>
-        <div>
-        <h3>1</h3>
+        <div className="caroImg1">
+        </div>      
+        <div className="caroImg2">
         </div>
-        <div>
-        <h3>2</h3>
+        <div className="caroImg3">
         </div>
-        <div>
-        <h3>3</h3>
-        </div>
-        <div>
-        <h3>4</h3>
+        <div className="caroImg4">
         </div>
     </Carousel>
 
+    <div className="flex">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div className="grids">
+
+    </div>
+
+    
     </div>    
     )
 }

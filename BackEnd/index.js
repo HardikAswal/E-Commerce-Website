@@ -1,25 +1,23 @@
 const express = require ('express');
+const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require ('mongoose');
 const cors = require ('cors');
 const multer = require ('multer');
-const upload = multer({dest: 'uploads/'});
 const Schema = mongoose.Schema;
-const app = express();
+let emptyFilePath;
 
 mongoose.connect('mongodb://localhost:27017/ecommerce', {useNewUrlParser: true});
 
 app.use(cors());
 app.use(bodyParser.json());   
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('uploads'));
 
 const ObjSchema = new Schema({
     date:Date,
     id:String,
     picture:{
-        file:String,
-        inputKey:String
+        file:Object
     },
     name:String,
     price:Number,
@@ -40,19 +38,42 @@ const Item = mongoose.model('Item', ObjSchema);
 
 app.get('/admin',(req,res)=>{
     Item.find({}).then((doc)=>{
-        console.log(doc)
+        console.log(doc);
         res.json(doc);
     })
 })
 
-app.post('/admin',upload.single('picture'),(req,res)=>{
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+    cb(null, '../Front-End/public/images')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' +file.originalname )
+  }
+})
 
-    console.log(req.files);
-    console.log("Path is:",req.body.picture.file);
+var upload = multer({ storage: storage }).single('file')
+
+app.post('/upload',upload,(req, res)=> {
+    upload(req, res, function (err) {
+           if (err instanceof multer.MulterError) {
+               return res.status(500).json(err)
+           } else if (err) {
+               return res.status(500).json(err)
+           }
+      console.log("File:"+req.file);
+      emptyFilePath = req.file;
+      return res.status(200).send(req.file)
+    })
+});
+
+app.post('/admin',(req,res)=>{
+    console.log("Body:",req.body);
+    console.log("Path: "+emptyFilePath);
     let item = new Item();
     item.date=req.body.date;
     item.id=req.body.id;
-    item.picture=req.body.picture;
+    item.picture.file=emptyFilePath;
     item.name=req.body.name;
     item.description=req.body.description;
     item.price=req.body.price;
@@ -68,7 +89,16 @@ app.post('/admin',upload.single('picture'),(req,res)=>{
     item.kids=req.body.kids;
     item.save();
     res.json(item);
-    console.log(item);
+    console.log("Item:",item);
+})
+
+//Remove Product
+app.delete("/admin/:id",(req,res)=>{
+    console.log("This is id:"+req.params.id);
+    Item.findOneAndDelete({_id:req.params.id}).then((doc)=>{
+        console.log(doc)
+        res.json(doc)
+    })
 })
 
 const PORT = 5000;

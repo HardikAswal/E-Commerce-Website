@@ -1,12 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 body{
 margin:0;
 padding:0;
+font-family: 'Montserrat', sans-serif;
+letter-spacing:0.5px;
 }
 
-.productGrid{
+#main{
+  overflow: hidden;   
+  padding-bottom: 100px;
+  min-height: 87.5vh;
+}
+
+/*Footer*/
+#footer{
+  background: #323336;
+  color: #fff;
+  font-size: 17px;
+  text-align: center;
+  padding: 12px;
+  border-top: 3px solid #4287f5;
+  position: relative;
+  margin-top: 30px; 
+  bottom: 0px;
+  width: 100%;
+}
+
+#footer p{
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+/*Homepage*/
+.flex{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 1em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin: 50px;
+}
+.flex > div{
+  margin-top: 30px;
+  background: #fff;
+  width: 81.6%;
+  height: 340px;
+  box-sizing: border-box;
+  margin: auto;
+  box-shadow: 0px 0px 20px rgba(100,100,0,0.5);
+}
+
+.flex > div:nth-child(1){
+  background-image: url('./flex1.jpg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.flex > div:nth-child(2){
+  background-image: url('./flex2.jpg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.flex > div:nth-child(3){
+  background-image: url('./flex3.jpg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.flex > div:nth-child(4){
+  background-image: url('./flex4.jpg');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 /* Admin Page */ 
@@ -15,11 +81,13 @@ padding:0;
   padding: 10px;
   float: left;
   width: 20%;
-  max-height: 100vh;
+  height: 100vh;
   padding-top: 30px;
   background: #323336;
   color: #fff;
   font-size: 18px;
+  /* position: sticky; */
+  /* top: 0px; */  
 }
 
 #product-info input{
@@ -28,9 +96,9 @@ padding:0;
   background: #323336;
   border: none;
   color: #fff;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid rgb(155, 155, 155);
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
 } 
 
 #product-info input:focus{
@@ -46,7 +114,7 @@ padding:0;
   background: #323336;
   color: #fff;
   border: none;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid rgb(115, 115, 115);
   outline: none;
   font-weight: 600;
   font-size: 16px;
@@ -82,7 +150,7 @@ padding:0;
 .admin-list{
   text-align: start;
   margin: auto;
-  min-height: 400px;
+  min-height: 420px;
   margin-top: 20px;
   padding:15px;
   width: 80%;
@@ -115,6 +183,7 @@ padding:0;
   margin-bottom: -10px;
   line-height: 0;
   text-transform: capitalize;
+  font-weight: bold;
 }
 
 .admin-product-desc{
@@ -131,6 +200,190 @@ padding:0;
 .admin-list:hover .admin-list-btn{
   display: inline;
 }
+
+/* Wishlist */
+.wishlist-container{
+  float: right;
+  width: 30%;
+  background: rgb(245, 245, 245);
+  color:#282c3f;
+  text-align: center;
+  padding: 4px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  right: 0;
+  padding-top: 30px;
+  overflow: scroll;
+  border-left: 1px solid rgb(177, 175, 175);
+}
+
+.wishlist-container h4{
+  margin-left: 70px;
+  text-transform: uppercase;
+  
+}
+
+.wishlist-productGrid{
+  text-align: start;
+  padding:10px;
+}
+
+.wishlist-product {
+  margin-bottom: 10px;
+  background-color: #fff;
+  padding:10px;
+  border: 2px solid rgba(0,0,0,0.1);
+}
+
+.wishlist-product Link{
+  outline: none;
+  text-decoration: none;
+}
+
+
+.wishlist-product img{
+  float: left;
+  width: 80px;
+  margin-right: 40px;
+  height: auto;
+}
+
+.wishlist-container::-webkit-scrollbar {
+  width: 0px;
+}
+.wishlist-container::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  background:rgb(245, 245, 245);
+}
+.wishlist-container::-webkit-scrollbar-thumb {
+  background: #888; 
+  background:rgb(245, 245, 245);
+}
+
+.wishlist-container::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+  background:rgb(245, 245, 245);
+}
+
+
+/* Product Pages */
+.productContainer h4{
+  display: inline;
+  margin-left: 30px;
+  font-weight: bold;
+  width: 10%;
+}
+
+.productSort{
+  display: inline;
+  float: right;
+  padding: 0;
+  margin-top: 0;
+  margin-right: 35px;
+}
+
+.productGrid{
+  float: right;
+  width: 75%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-top: 60px;
+}
+
+.gridProduct{
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 80%;
+  padding: 15px;
+  padding-top:25px;
+  position: relative;
+}
+
+.gridProductImage{
+  text-align:center;
+}
+
+.gridProduct img {
+  height: 250px;
+  width: auto;
+  margin-bottom: 15px;
+}
+
+.gridProductName{
+  font-weight: bold;
+  color: #323336;
+}
+
+.gridProductNam Link:hover{
+  text-decoration: none;
+}
+
+.gridProductWishlist{
+  position: absolute;
+  top: -18px;
+  right: -19px;
+}
+
+.gridProductWishlist:active{
+  border: 3px solid #4287f5;
+  border-radius: 50px;
+}
+
+.gridProductWishlist button{
+  outline: none;
+  padding: 10px 9px 5px 9px;
+  background-color: white;
+  border-radius: 50px;
+  border: 0px;
+  text-align: center;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.gridProductWishlist button i{
+}
+
+/*Carousel*/
+
+.ant-carousel .slick-slide{
+  background-color:#fafafa !important;
+}
+
+.ant-carousel .slick-slide:nth-child(2){
+  background-image: url('./1.jpg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color:#fafafa !important;
+}
+
+.ant-carousel .slick-slide:nth-child(3){
+  background-image: url('./2.jpg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color:#ffc2e0 !important;
+}
+
+.ant-carousel .slick-slide:nth-child(4){
+  background-image: url('./3.jpg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color:#EEB865 !important;
+}
+
+.ant-carousel .slick-slide:nth-child(5){
+  background-image: url('./4.jpg') !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color:#1B1C20 !important;
+}
+
+
+
+
 
 
 

@@ -8,10 +8,11 @@ class Kids extends React.Component {
        
         let sizeSelect=null;
         let gender="Kids";
+
         return (
-            <div>
-            <h1>Welcome To Kids section</h1>
-            <div>
+            <div className="productContainer">
+            <h4>Kids Tshirts</h4>
+            <div className="productSort">
                 <select onChange={(e)=>{this.props.sort(e)}}>
                     <option value="Default">Default</option>
                     <option value="High To Low">Price: High to Low</option>
@@ -20,14 +21,13 @@ class Kids extends React.Component {
             </div>
             <div className="productGrid">
             {this.props.products.map((x)=>x.kids ? 
-            <div>
-            <Link to="/Product">
-            <button onClick={(e)=>{this.props.showProduct({x})}}>
-            {<img src={x.picture.file} alt="Product" style={{width:'250px'}}></img>}
-            <div>{x.name}{x.price}</div>
-            </button>
+            <div className="gridProduct">
+            <Link to="/Product" onClick={(e)=>{this.props.showProduct({x})}}>
+            <div className="gridProductImage">{<img src={"/images/"+x.picture.file.filename} alt="Product" style={{width:'250px'}}></img>}</div>  
+            <div className="gridProductName">{x.name}</div>
             </Link>
-            <div>
+            <div className="gridProductPrice">Rs.{x.price}</div>
+            <div className="gridProductSize">
                 <select onChange={(e)=>{x.sizeSelect=e.target.value;console.log(x.sizeSelect)}}>
                     <option>Select</option>
                     <option>S</option>
@@ -36,9 +36,8 @@ class Kids extends React.Component {
                     <option>XL</option>
                 </select>
             </div>
-            <div>{<button onClick={(e)=>{this.props.addToCart({x,gender})}}>Add To Cart</button>}
-            {<button onClick={(e)=>this.props.addToWishlist({x})}>Add To Wishlist</button>}
-            </div>
+            <div className="gridProductCart">{<button onClick={(e)=>{this.props.addToCart({x,gender})}}>Add To Cart</button>}</div>
+            <div className="gridProductWishlist">{<button onClick={(e)=>this.props.addToWishlist({x})}><i className="far fa-heart" style={{fontSize:"20px"}}></i></button>}</div>
             </div>:null)}
             </div>
             </div>

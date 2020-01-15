@@ -11,6 +11,7 @@ import Kids from "./Components/kids";
 import Admin from "./Components/admin";
 import Product from "./Components/product";
 import Buynow from './Components/buynow';
+import Footer from './Components/footer';
 import './carousel.css';
 import {BrowserRouter as Router,Route,Link} from "react-router-dom";
 
@@ -19,6 +20,7 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state={};
+    this.state.show=null;
     this.state.products=[];
     this.state.admin=[];
     this.state.cart=[];
@@ -28,12 +30,14 @@ class App extends React.Component {
 
   componentDidMount(){
     axios.get('http://localhost:5000/admin').then((res)=>{
+      console.log(res.data);
       const products = res.data;
       const admin = res.data;
       this.setState({
         products,
         admin
       });
+      console.log(this.state.admin);
     })}
 
   //Add product information from Admin Page
@@ -41,11 +45,12 @@ class App extends React.Component {
     let s = this.state.products;
     let j = this.state.admin;
     console.log(info);
+
     let obj ={name:"",price:"",picture:null,date: new Date(),id:Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 15),description:"",style:"",neck:"",sleeve:"",sizeSelect:null,qtyS:"",qtyM:"",qtyL:"",qtyXL:"",men:"",women:"",kids:""};
 
     if (info.productPicture.file !== null && info.productName !== "" && info.productPrice >= 0 
     && info.productDesc !== "" && info.qtyS >= 0 && info.qtyM >= 0 && info.qtyL >= 0 && info.qtyXL >= 0
-    && info.neck !== "" && info.sleeve !== "" && info.style !== ""){
+    && info.neck !== "" && info.sleeve !== "" && info.style !== ""){ 
     obj.picture=info.productPicture;
     obj.name=info.productName;
     obj.price=info.productPrice;
@@ -61,23 +66,33 @@ class App extends React.Component {
     obj.women=info.women;
     obj.kids=info.kids;
 
+    console.log(obj);
+    console.log(info.productPicture.file);
+
+    const data = new FormData();
+    data.append('file', info.productPicture.file);
+
+    axios.post('http://localhost:5000/upload', data, { // receive two parameter endpoint url ,form data 
+    })
+       .then(res => { // then print response status
+         console.log(res.statusText)
+       })
+
     axios.post('http://localhost:5000/admin',obj).then((res)=>{
-      //s.push(res.data);
+      console.log(res.statusText)
+      console.log("Products",res.data);
       j.push(res.data);
-  
       this.setState({
         products:s,
         admin:j
       });
-      console.log("Products",res.data);
     });
     }
 
     else{
       alert("Please fill all the fields.")
     }
-  }
-  
+  }  
 
   //Update product information
   UpdateInfo(product,x,i){
@@ -145,9 +160,7 @@ class App extends React.Component {
           else if (product.updateKids === "False"){
             u[i].kids = false;
           }
-        }
-        
-        
+        } 
       }
     }
 
@@ -162,14 +175,23 @@ class App extends React.Component {
   addToCart(product){
     console.log(product);
     console.log(product.x);
+    console.log(product.x.id);
+    var matchFound=0;
 
-    if (product.x.sizeSelect !== null && product.x.sizeSelect !== "Select"){
+    for (var i=0;i<this.state.cart.length;i++){
+      if (product.x.id === this.state.cart[i].id){
+        matchFound = matchFound + 1;
+      }  
+    }
+
+    if (product.x.sizeSelect !== null && product.x.sizeSelect !== "Select" && matchFound === 0){
     let cart= this.state.cart;
-    let cartObj={name:"",price:"",picture:"",style:"",neck:"",sleeve:"",qtyS:0,qtyM:0,qtyL:0,qtyXL:0,men:false,women:false,kids:false,sizeSelect:null,gender:null};
+    let cartObj={name:"",price:"",picture:"",id:"",style:"",neck:"",sleeve:"",qtyS:0,qtyM:0,qtyL:0,qtyXL:0,men:false,women:false,kids:false,sizeSelect:null,gender:null};
     
     cartObj.picture=product.x.picture;
     cartObj.name=product.x.name;
     cartObj.price=product.x.price;
+    cartObj.id = product.x.id;
     cartObj.qtyS=product.x.qtyS;
     cartObj.qtyM=product.x.qtyM;
     cartObj.qtyL=product.x.qtyL;
@@ -247,12 +269,22 @@ class App extends React.Component {
   addToWishlist(product){
     console.log(product);
     console.log(product.x);
+    var matchFound=0;
+
+    for (var i=0;i<this.state.wishlist.length;i++){
+      if (product.x.id === this.state.wishlist[i].id){
+        matchFound = matchFound + 1;
+      }  
+    }
+
+    if (matchFound === 0){
     let wishlist= this.state.wishlist;
-    let wishlistObj={name:"",price:"",picture:"",style:"",neck:"",sleeve:"",qtyS:0,qtyM:0,qtyL:0,qtyXL:0,men:false,women:false,kids:false};
+    let wishlistObj={name:"",price:"",picture:"",id:"",style:"",neck:"",sleeve:"",qtyS:0,qtyM:0,qtyL:0,qtyXL:0,men:false,women:false,kids:false};
     
     wishlistObj.picture=product.x.picture;
     wishlistObj.name=product.x.name;
     wishlistObj.price=product.x.price;
+    wishlistObj.id=product.x.id;
     wishlistObj.qtyS=product.x.qtyS;
     wishlistObj.qtyM=product.x.qtyM;
     wishlistObj.qtyL=product.x.qtyL;
@@ -271,6 +303,7 @@ class App extends React.Component {
       wishlist:wishlist
     })
     console.log(this.state.wishlist);
+  }
   }
 
   //Delete product from cart
@@ -426,11 +459,13 @@ removeProduct(product){
     }
   }
 
-  this.setState({
-    products:p,
-    admin:a,
-    cart:c,
-    wishlist:w
+  axios.delete("http://localhost:5000/admin/"+product.x._id).then((res)=>{
+    this.setState({
+      products:p,
+      admin:a,
+      cart:c,
+      wishlist:w
+    })
   })
 }
 
@@ -526,22 +561,34 @@ keyPress(e){
   }
 }
 
+changeShow(e){
+  console.log(e.target.value);
+  
+  this.setState({
+    show:!this.state.show
+  })
+}
+
   render(){
     return (
       <React.Fragment>
-        <Route path="/" render={(e)=><Nav wishlist={this.state.wishlist} cart={this.state.cart} keyPress={this.keyPress.bind(this)}></Nav>}></Route>
-        <Link to="/Admin">Admin Side</Link>
+        <div id="main">
+        <Route path="/" render={(e)=><Nav changeShow={this.changeShow.bind(this)} show={this.state.show} wishlist={this.state.wishlist} cart={this.state.cart} keyPress={this.keyPress.bind(this)}></Nav>}></Route>
+        <div id="content">
         <Route path="/" exact component={Home}></Route>
         <Route path="/Cart" render={(e)=><Cart AddInfo={this.AddInfo.bind(this)} deleteFromCart={this.deleteFromCart.bind(this)} cart={this.state.cart} cartToWishlist={this.cartToWishlist.bind(this)} wishlistToCart={this.wishlistToCart.bind(this)} addToCart={this.addToCart.bind(this)} addToWishlist={this.addToWishlist.bind(this)} products={this.state.products} showProduct={this.showProduct.bind(this)}></Cart>}></Route>
-        <Route path="/Wishlist" render={(e)=><Wishlist AddInfo={this.AddInfo.bind(this)} deleteFromWishlist={this.deleteFromWishlist.bind(this)} cartToWishlist={this.cartToWishlist.bind(this)} wishlistToCart={this.wishlistToCart.bind(this)} addToCart={this.addToCart.bind(this)} wishlist={this.state.wishlist} addToWishlist={this.addToWishlist.bind(this)} products={this.state.products} showProduct={this.showProduct.bind(this)}></Wishlist>}></Route>
+        <Route path="/" render={(e)=><Wishlist changeShow={this.changeShow.bind(this)} show={this.state.show} AddInfo={this.AddInfo.bind(this)} deleteFromWishlist={this.deleteFromWishlist.bind(this)} cartToWishlist={this.cartToWishlist.bind(this)} wishlistToCart={this.wishlistToCart.bind(this)} addToCart={this.addToCart.bind(this)} wishlist={this.state.wishlist} addToWishlist={this.addToWishlist.bind(this)} products={this.state.products} showProduct={this.showProduct.bind(this)}> </Wishlist>}></Route>
         <Route path="/Admin" render={(e)=><Admin AddInfo={this.AddInfo.bind(this)} UpdateInfo={this.UpdateInfo.bind(this)} products={this.state.products} admin={this.state.admin} removeProduct={this.removeProduct.bind(this)}></Admin>}></Route>
-        <Route path="/Men" render={(e)=><Men AddInfo={this.AddInfo.bind(this)} addToCart={this.addToCart.bind(this)} addToWishlist={this.addToWishlist.bind(this)} products={this.state.products} showProduct={this.showProduct.bind(this)} sort={this.sort.bind(this)}></Men>}></Route>
+        <Route path="/Men" render={(e)=><Men AddInfo={this.AddInfo.bind(this)} addToCart={this.addToCart.bind(this)} addToWishlist={this.addToWishlist.bind(this)} wishlist={this.state.wishlist} products={this.state.products} showProduct={this.showProduct.bind(this)} sort={this.sort.bind(this)}></Men>}></Route>
         <Route path="/Women" render={(e)=><Women AddInfo={this.AddInfo.bind(this)} addToCart={this.addToCart.bind(this)} addToWishlist={this.addToWishlist.bind(this)} products={this.state.products} showProduct={this.showProduct.bind(this)} sort={this.sort.bind(this)}></Women>}></Route>
         <Route path="/Kids" render={(e)=><Kids AddInfo={this.AddInfo.bind(this)} addToCart={this.addToCart.bind(this)} addToWishlist={this.addToWishlist.bind(this)} products={this.state.products} showProduct={this.showProduct.bind(this)} sort={this.sort.bind(this)}></Kids>}></Route>
         <Route path="/Product" render={(e)=><Product showProduct={this.showProduct.bind(this)} productPage={this.state.productPage}></Product>}></Route>
         <Route path="/Buynow" component={Buynow}></Route>
+        </div>
+        </div>
+        <Route path="/" component={Footer}></Route>
       </React.Fragment>
-    )
+    ) 
   }
 }
 export default App;

@@ -7,7 +7,7 @@ function Admin(props){
     const [productName, setproductName] = React.useState("");
     const [productDesc, setproductDesc] = React.useState("");
     const [productPrice, setproductPrice] = React.useState("");
-    let [productPicture, setproductPicture] = React.useState({file:null,inputKey:Date.now()});
+    let [productPicture, setproductPicture] = React.useState({file:null});
     const [qtyS,setqtyS]= React.useState("");
     const [qtyM,setqtyM]= React.useState("");
     const [qtyL,setqtyL]= React.useState("");
@@ -34,15 +34,16 @@ function Admin(props){
     const [updateMen, setupdateMen] = React.useState("");
     const [updateWomen, setupdateWomen] = React.useState("");
     const [updateKids, setupdateKids] = React.useState("");
-   
 
     const setImage = (e) => {
         //console.log(e.target.files[0].name);
         let file = e.target.files[0];  //Capture the file in variable otherwise event gets nullified and you won't get file.
-        //console.log(file);
+        console.log(file);
+        console.log(URL.createObjectURL(file))
         setproductPicture(prevState=>({
            ...prevState,
-           file: URL.createObjectURL(file)
+        //    file:URL.createObjectURL(file)
+        file:file
         }))
       }
 
@@ -69,7 +70,6 @@ function Admin(props){
 
     return (
         <div id="admin-container">
-            <Link to="/">Go back</Link><br/>
             <div id="product-info"> 
             <input type="file" required onChange={setImage} key={productPicture.inputKey}/><br/>
             <input type="text" required placeholder="Product Name" onChange={(e)=>{setproductName(e.target.value)}} value={productName}/><br/>
@@ -103,7 +103,7 @@ function Admin(props){
             <input type="checkbox" name="Women" value="Women" checked={women} onChange={(e)=>setWomen(e.target.checked)}/>Women
             <input type="checkbox" name="Kids" value="Kids" checked={kids }onChange={(e)=>setKids(e.target.checked)}/>Kids
             <br/>
-            <button type="Submit" onClick={(e)=>{props.AddInfo({productName,productPicture,productPrice,productDesc,qtyS,qtyM,qtyL,qtyXL,style,neck,sleeve,men,women,kids});setproductName("");setproductPicture({file:null,inputKey:Date.now()});setproductPrice("");setproductDesc("");setqtyS("");setqtyM("");setqtyL("");setqtyXL("");setstyle("");setneck("");setsleeve("");setMen(false);setWomen(false);setKids(false)}}>Add</button>
+            <button type="Submit" onClick={(e)=>{props.AddInfo({productName,productPicture,productPrice,productDesc,qtyS,qtyM,qtyL,qtyXL,style,neck,sleeve,men,women,kids});setproductName("");setproductPicture({file:null});setproductPrice("");setproductDesc("");setqtyS("");setqtyM("");setqtyL("");setqtyXL("");setstyle("");setneck("");setsleeve("");setMen(false);setWomen(false);setKids(false)}}>Add</button>
             <br/><br/>
             </div>
 
@@ -111,7 +111,8 @@ function Admin(props){
                 {props.admin.map((x,i)=>(
             <div className="admin-list">
                 <div className="admin-product-image">
-                {typeof x.picture.file  === 'string' ? <img src={x.picture.file} alt="Product" style={{width:"250px",height:"auto"}}></img>:""}
+                 {console.log("Admin side received product details: ",x)}   
+                {/*typeof x.picture.file  === 'string' ? */<img src={"/images/"+x.picture.file.filename} alt="Product" style={{width:"250px",height:"auto"}}></img>/*:""*/}
                 </div>
                 <br/>
 
