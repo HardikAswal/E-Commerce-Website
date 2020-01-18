@@ -115,7 +115,7 @@ class App extends React.Component {
     for (let i=0;i<this.state.products.length;i++){
       if (u[i].id === x.x.id){
         if (product.updateName !== ""){
-          u[i].name = product.updateName;  
+          u[i].name = product.updateName;
         }
         if (product.updateDesc !== ""){
           u[i].description = product.updateDesc;  
@@ -174,6 +174,7 @@ class App extends React.Component {
       }
     }
 
+    axios.post("http://localhost:5000/update",)
     this.setState({
       products:u,
       admin:u

@@ -16,7 +16,7 @@ class Cart extends React.Component {
                {this.props.cart.map((x,i)=><div>
                 <Link to="/Product">
                <button onClick={(e)=>{this.props.showProduct({x})}}>
-               {<img src={x.picture.file} alt="Product" style={{width:'250px'}}></img>}
+               {<img src={"/images/"+x.picture.file.filename} alt="Product" style={{width:'250px'}}></img>}
                <div>{x.name}{x.price}</div>
                </button>
                </Link>

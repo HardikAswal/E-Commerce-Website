@@ -23,7 +23,7 @@ function Admin(props){
     const [updateName, setupdateName] = React.useState("");
     const [updateDesc, setupdateDesc] = React.useState("");
     const [updatePrice, setupdatePrice] = React.useState("");
-    const [updatePicture, setupdatePicture] = React.useState({file:null,inputKey:Date.now()});
+    const [updatePicture, setupdatePicture] = React.useState({file:null});
     const [updateQtyS, setupdateQtyS] = React.useState("");
     const [updateQtyM, setupdateQtyM] = React.useState("");
     const [updateQtyL, setupdateQtyL] = React.useState("");
@@ -53,7 +53,7 @@ function Admin(props){
         // console.log(file);
         setupdatePicture(prevState=>({
            ...prevState,
-           file: URL.createObjectURL(file)
+           file: file
         }))
       } 
 
@@ -164,7 +164,7 @@ function Admin(props){
                         <option value="False">False</option>
                     </select>
             <br/>
-                <button type="submit" onClick={(e)=>{props.UpdateInfo({updateName,updateDesc,updatePrice,updatePicture,updateQtyS,updateQtyM,updateQtyL,updateQtyXL,updateStyle,updateNeck,updateSleeve,updateMen,updateWomen,updateKids},{x},i);setupdateName("");setupdateDesc("");setupdatePrice("");setupdatePicture({file:null,inputKey:Date.now()});setupdateQtyS("");setupdateQtyM("");setupdateQtyL("");setupdateQtyXL("");setupdateStyle("");setupdateNeck("");setupdateSleeve("");setupdateMen("");setupdateWomen("");setupdateKids("")}}>Save</button>
+                <button type="submit" onClick={(e)=>{props.UpdateInfo({updateName,updateDesc,updatePrice,updatePicture,updateQtyS,updateQtyM,updateQtyL,updateQtyXL,updateStyle,updateNeck,updateSleeve,updateMen,updateWomen,updateKids},{x},i);setupdateName("");setupdateDesc("");setupdatePrice("");setupdatePicture({file:null});setupdateQtyS("");setupdateQtyM("");setupdateQtyL("");setupdateQtyXL("");setupdateStyle("");setupdateNeck("");setupdateSleeve("");setupdateMen("");setupdateWomen("");setupdateKids("")}}>Save</button>
             </div>:null}
              <div className="admin-product-info">
              <b><h5>{x.name}</h5></b>
