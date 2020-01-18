@@ -67,7 +67,8 @@ app.post('/upload',upload,(req, res)=> {
     })
 });
 
-app.post('/admin',(req,res)=>{
+
+app.post('/admin',upload,(req,res)=>{
     console.log("Body:",req.body);
     console.log("Path: "+emptyFilePath);
     let item = new Item();

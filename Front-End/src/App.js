@@ -76,17 +76,27 @@ class App extends React.Component {
     })
        .then(res => { // then print response status
          console.log(res.statusText)
+
+        if (res.statusText == "OK"){
+        axios.post('http://localhost:5000/admin',obj).then((res)=>{
+          console.log("Products",res.data);
+          j.push(res.data);
+          this.setState({
+            products:s,
+            admin:j
+          });
+        });
+        }
        })
 
-    axios.post('http://localhost:5000/admin',obj).then((res)=>{
-      console.log(res.statusText)
-      console.log("Products",res.data);
-      j.push(res.data);
-      this.setState({
-        products:s,
-        admin:j
-      });
-    });
+    // axios.post('http://localhost:5000/admin',obj).then((res)=>{
+    //   console.log("Products",res.data);
+    //   j.push(res.data);
+    //   this.setState({
+    //     products:s,
+    //     admin:j
+    //   });
+    // });
     }
 
     else{
